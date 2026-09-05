@@ -1,0 +1,188 @@
+{
+  "claim": "C(14)=102",
+  "file_sha256": {
+    "certificates/exact_closures/n14/all_low_slack_belt_census.json": "ed3486399b90835fa52682fc5e060d239704d1cc1412c0311c3399908603584d",
+    "certificates/upper_bounds/depth4_boundary_census.json": "d6117cc6ff6e83acac423b7af6f35a2dd64c0776d47a3ab38df7d5f926a2e3db",
+    "certificates/upper_bounds/depth4_ring_certificate.json": "17bf3c569e737c8e33cee9815c7044345bc19e156cbb30f5e163a5d1e054447e",
+    "constructions/n14.json": "0a8385aba85339848fe88244f6e77252713d3b82ec05c45a416d2a023593f2f0",
+    "scripts/closures/n14/enumerate_all_low_slack_belts.py": "8530e73c2391834381bd310fbf595cc1a192789270c5226f5b73a08e8085d1f7",
+    "scripts/closures/n14/enumerate_minimum_belts.py": "074e4858f0d9bc9cfdca7f90ca0508e8ac271d6a7c32ea7420f5b655eb1e6a8d"
+  },
+  "lower_bound": {
+    "block_free": true,
+    "eight_connected": true,
+    "full_exterior_ring_verified": true,
+    "population": 102,
+    "wastage": 40,
+    "witness_sha256": "0a8385aba85339848fe88244f6e77252713d3b82ec05c45a416d2a023593f2f0"
+  },
+  "proof_logic": [
+    "A connected still life with more than four cells contains no live 2x2 block, since such a block is an isolated 8-connected component.",
+    "The Chu--Stuckey identity gives total wastage 2*n^2+4*n-4*population=36 at n=14, population 103.",
+    "All local wastage terms are nonnegative, so the physical depth-four boundary belt of such a board has charge <=36.",
+    "The complete block-free boundary language enumerates all 2,664 abstract cycle orbits and all 261,225 physical low-slack belts admitted by that charge budget.",
+    "Exact completion of each remaining 4x4 centre produces 224 stable population-103 boards, all disconnected.",
+    "The independently verified connected 102 witness supplies the matching lower bound, hence C(14)=102."
+  ],
+  "record_sha256_excluding_this_field": "c68d6416f9df70587961002ffb703c377120a9d46b5c3be73f86b16790b8d3c8",
+  "sample_rechecks": [
+    {
+      "block_free": true,
+      "component_sizes": [
+        91,
+        6,
+        6
+      ],
+      "population": 103,
+      "sha256": "43e6fa8b77195133a2dfd921187f68d7b3cdb91c80b821c70330b6f52ecf8c52",
+      "wastage": 36
+    },
+    {
+      "block_free": true,
+      "component_sizes": [
+        91,
+        6,
+        6
+      ],
+      "population": 103,
+      "sha256": "8d0e9f5ae02e1fa91bd59873b3fec2cce28812ce5e69fd27a4a4b8271652a001",
+      "wastage": 36
+    },
+    {
+      "block_free": true,
+      "component_sizes": [
+        91,
+        6,
+        6
+      ],
+      "population": 103,
+      "sha256": "24100f2b324027b08313099148b5c9f7166fe72fe762bcfb20aa5f992fca3128",
+      "wastage": 36
+    },
+    {
+      "block_free": true,
+      "component_sizes": [
+        91,
+        6,
+        6
+      ],
+      "population": 103,
+      "sha256": "a0a3fd54b95fe29561c251261ed438669605000934d6266451680d0a2a58cef5",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "370f681c5a246ff3f1aaf6238dbccfcddfb6629c759a787e43466803a71d0256",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "3ea148631e353e0a66f533c87694fa797dadcb2f11ba7578f2585a5f6b73fdcd",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "e5e82400ab08469161f41ca3fb2d5d15caa8a4546326065e5ff6eb3d9ba73ddd",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "694a02016febd9deca9063db1a3b43405b2e2beeece1cbdba6ec7e9c3658322b",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "b1c06776c19e8491ad0a4bb6a647885fa2041ccf93c6735c4f7950d18e4cded2",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "a7062ea34c4888da497cb4d24699506c7c146a6c6bc9000386065d5e1b38a5fe",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "f6f1433c2444a3094a84f4d88d02cbb7e0eeb2ac324d50b3b5d24e0949d692d2",
+      "wastage": 36
+    },
+    {
+      "block_free": false,
+      "component_sizes": [
+        87,
+        6,
+        6,
+        4
+      ],
+      "population": 103,
+      "sha256": "0d8de2ddd989989ead8c68b13a14bd2dec2e2f72065dd96bdd7f0d4c4dd80941",
+      "wastage": 36
+    }
+  ],
+  "schema": "connected-still-life-n14-closure-certificate-v1",
+  "upper_and_exclusion": {
+    "abstract_cycles_mod_rotation": 2664,
+    "all_physical_belts_charge_at_most_36": 261225,
+    "component_size_histogram": {
+      "49,38,6,6,4": 25,
+      "54,39,6,4": 60,
+      "87,6,6,4": 75,
+      "91,6,6": 8,
+      "93,6,4": 52,
+      "97,6": 4
+    },
+    "connected_population_103_completions": 0,
+    "depth4_population_upper": 103,
+    "population_103_total_wastage": 36,
+    "stable_grid_digest_sha256": "eed0208c11fdd796ce272027d98790df44a10931faf7109ec8e487864fb32fc3",
+    "stable_population_103_completions": 224
+  }
+}
