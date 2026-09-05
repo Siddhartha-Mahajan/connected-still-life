@@ -2,9 +2,9 @@
 
 This is a field-by-field draft for the OEIS new-sequence form, checked against
 the [OEIS Style Sheet](https://oeis.org/wiki/Style_Sheet) on September 5, 2026.
-Replace every bracketed repository placeholder and repeat a live duplicate
-search before submission. A direct OEIS search on September 5, 2026 for the
-terms with the initial zero omitted returned no results.
+Repeat a live duplicate search before submission. A direct OEIS search on
+September 5, 2026 for the terms with the initial zero omitted returned no
+results.
 
 The [OEIS policy on AI](https://oeis.org/wiki/Use_of_AI_for_OEIS_Submissions)
 makes the human submitter responsible for every statement and does not permit
@@ -68,8 +68,8 @@ Put the b-file first after an A-number has been assigned:
 S. Mahajan, <a href="/Axxxxxx/bxxxxxx.txt">Table of n, a(n) for n = 1..25</a>.
 ASP Competition 2013, <a href="https://www.mat.unical.it/aspcomp2013/ConnectedMaximumDensityStillLife">Connected Maximum-density Still Life</a>.
 G. Chu and P. J. Stuckey, <a href="https://doi.org/10.1016/j.artint.2012.02.001">A complete solution to the Maximum Density Still Life Problem</a>, Artificial Intelligence, 184-185 (2012), 1-16.
-S. Mahajan, <a href="https://github.com/[OWNER]/[REPOSITORY]/tree/[RELEASE-TAG]">Maximum connected still lifes: witnesses, bounds, and reproducible optimality proofs</a>.
-S. Mahajan, <a href="https://github.com/[OWNER]/[REPOSITORY]/blob/[RELEASE-TAG]/docs/optima_1_25.svg">Illustrations of the proved optima for n = 1..25</a>.
+S. Mahajan, <a href="https://github.com/Siddhartha-Mahajan/connected-still-life/tree/v1.0.0">Maximum connected still lifes: witnesses, bounds, and reproducible optimality proofs</a>.
+S. Mahajan, <a href="https://github.com/Siddhartha-Mahajan/connected-still-life/blob/v1.0.0/docs/optima_1_25.svg">Illustrations of the proved optima for n = 1..25</a>.
 ```
 
 Use a permanent release tag or commit hash, not a moving branch URL. The
@@ -149,8 +149,8 @@ repository, not in `AUTHOR`.
   root and ensure it exits successfully.
 - Compare `DATA` and the eventual b-file byte-for-byte with
   `data/exact_prefix.txt`.
-- Replace `Axxxxxx`, `[OWNER]`, `[REPOSITORY]`, and `[RELEASE-TAG]` only after
-  those values exist; test every public link in a logged-out browser.
+- Replace `Axxxxxx` only after the assigned A-number exists; test every public
+  link in a logged-out browser.
 - Choose and record an explicit repository license before public release.
 - Rewrite and personally verify `COMMENTS`, then sign any later edits or
   comments with four tildes as requested by OEIS.
