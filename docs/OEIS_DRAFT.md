@@ -68,8 +68,8 @@ Put the b-file first after an A-number has been assigned:
 S. Mahajan, <a href="/Axxxxxx/bxxxxxx.txt">Table of n, a(n) for n = 1..25</a>.
 ASP Competition 2013, <a href="https://www.mat.unical.it/aspcomp2013/ConnectedMaximumDensityStillLife">Connected Maximum-density Still Life</a>.
 G. Chu and P. J. Stuckey, <a href="https://doi.org/10.1016/j.artint.2012.02.001">A complete solution to the Maximum Density Still Life Problem</a>, Artificial Intelligence, 184-185 (2012), 1-16.
-S. Mahajan, <a href="https://github.com/Siddhartha-Mahajan/connected-still-life/tree/v1.0.0">Maximum connected still lifes: witnesses, bounds, and reproducible optimality proofs</a>.
-S. Mahajan, <a href="https://github.com/Siddhartha-Mahajan/connected-still-life/blob/v1.0.0/docs/optima_1_25.svg">Illustrations of the proved optima for n = 1..25</a>.
+S. Mahajan, <a href="https://github.com/Siddhartha-Mahajan/connected-still-life/tree/v1.0.1">Maximum connected still lifes: witnesses, bounds, and reproducible optimality proofs</a>.
+S. Mahajan, <a href="https://github.com/Siddhartha-Mahajan/connected-still-life/blob/v1.0.1/docs/optima_1_25.svg">Illustrations of the proved optima for n = 1..25</a>.
 ```
 
 Use a permanent release tag or commit hash, not a moving branch URL. The

@@ -75,10 +75,24 @@ investigation with AI assistance that established most of the optimal values
 reported in this release. Siddhartha remains responsible for checking and
 presenting the results.
 
-We acknowledge the [CAISc 2026](https://caisc2026.github.io/) organizing committee:
-Dhruv Kumar, Dhruv Trehan, Paras Chopra, Siddhartha Mahajan and Devansh Agarwal;
-program chairs Pratik Narang and Murari Mandal; and co-organizers Lossfunk and
-BITS Pilani, as listed on the [team page](https://caisc2026.github.io/team.html).
-We thank the participating researchers whose papers informed this work.
+We thank [Dr. Ankan Pal](https://www.linkedin.com/in/ankanpal21/)
+([Google Scholar](https://scholar.google.com/citations?user=Xb7FSjUAAAAJ&hl=en))
+for reviewing the connected-still-life problem page for CAISc.
+
+We acknowledge the [CAISc 2026](https://caisc2026.github.io/) team:
+
+- Organizing committee: [Dr. Dhruv Kumar](https://www.linkedin.com/in/dhruv-kumar-87082b335/),
+  [Dhruv Trehan](https://www.linkedin.com/in/dhruvtrehan/),
+  [Paras Chopra](https://www.linkedin.com/in/paraschopra/),
+  [Siddhartha Mahajan](https://www.linkedin.com/in/siddharthamahajan03/), and
+  [Devansh Agarwal](https://www.linkedin.com/in/devansh-agarwal-874605180/).
+- Program chairs: [Dr. Pratik Narang](https://www.linkedin.com/in/pratik-narang/)
+  and [Dr. Murari Mandal](https://www.linkedin.com/in/murari-mandal/).
+- Co-organizers: [Lossfunk](https://lossfunk.com/) and
+  [BITS Pilani](https://www.bits-pilani.ac.in/).
+
+These roles and profile links follow the official
+[CAISc team page](https://caisc2026.github.io/team.html). We thank the
+participating researchers whose papers informed this work.
 [References and attribution](docs/REFERENCES.md) link the papers with their
 verified authors. Acknowledgment does not imply authorship or endorsement.
