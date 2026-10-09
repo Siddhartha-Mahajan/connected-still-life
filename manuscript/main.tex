@@ -1,0 +1,1278 @@
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage{graphicx}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\definecolor{linkblue}{HTML}{164E63}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=linkblue,
+  citecolor=linkblue,
+  urlcolor=linkblue,
+  pdftitle={Extremal Connected Still Lifes in Square Boards},
+  pdfauthor={Siddhartha Mahajan}
+}
+\graphicspath{{figures/}}
+\setlist[itemize]{leftmargin=*,nosep}
+\setlist[enumerate]{leftmargin=*,nosep}
+\renewcommand{\arraystretch}{1.08}
+\allowdisplaybreaks
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Extremal Connected Still Lifes}
+\fancyhead[R]{Mahajan}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{13.6pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{definition}{definition}{definitions}
+\Crefname{definition}{Definition}{Definitions}
+
+\newcommand{\B}{\mathcal B}
+\newcommand{\N}{\mathcal N}
+\newcommand{\Pop}{\operatorname{pop}}
+\newcommand{\Dfour}{D_4}
+\newcommand{\Rminus}{\mathcal R_{-2}}
+\newcommand{\bits}{\{0,1\}}
+
+\title{\bfseries Extremal Connected Still Lifes in Square Boards}
+\author{
+Siddhartha Mahajan\\[5pt]
+\small Lossfunk Research Laboratory, Bengaluru, Karnataka, India\\[4pt]
+\scriptsize Corresponding author: \href{mailto:siddharthamahajan03@gmail.com}{\texttt{siddharthamahajan03@gmail.com}}
+}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $C(n)$ denote the largest population of a stable Conway Life pattern in an
+$n\times n$ square whose live cells form one component under Moore adjacency;
+the exterior of the square is dead.  We determine
+\[
+\begin{aligned}
+C(1),\ldots,C(25)={}&0,4,6,8,11,18,28,32,43,53,63,76,88,\\
+&102,119,134,151,170,188,210,230,251,276,299,325
+\end{aligned}
+\]
+and the further values $C(29)=435$, $C(31)=497$, $C(32)=528$,
+$C(33)=562$, $C(37)=704$, $C(39)=782$, $C(41)=863$, $C(45)=1037$,
+$C(49)=1228$, $C(53)=1434$, $C(57)=1657$, and $C(65)=2150$.  The first
+unresolved case satisfies $350\le C(26)\le352$, and every unresolved size
+$n\le50$ has a gap of at most five cells.
+
+A live $2\times2$ block is an isolated Moore component, so every connected
+still life with more than four cells is block-free.  Combining this local
+obstruction with the Chu--Stuckey wastage identity yields finite-state
+boundary relaxations, and exact min-plus composition of edge automata and
+corner relations gives, for every $n\ge14$,
+\[
+ C(n)\le \min\!\left\{M(n),
+ \left\lfloor\frac{4n^2+5n-d_{n\bmod8}}8\right\rfloor\right\},
+ \qquad
+ (d_0,\ldots,d_7)=(26,23,18,23,20,23,26,11),
+\]
+where $M(n)$ is the unrestricted maximum.  Explicit period-eight band
+families give $C(n)\ge n(n+1)/2-4$ for every $n\ge1$, with equality of the
+constant at $n=5$ and $n=8$, and hence $\lim_{n\to\infty}C(n)/n^2=1/2$.
+\end{abstract}
+
+\section{Introduction}
+
+A still life is a fixed point of Conway's Game of Life: each live cell has two
+or three live neighbours, and each dead cell has a number of live neighbours
+different from three.  In the finite maximum-density problem the live set is
+confined to an $n\times n$ square and every cell outside the square is dead.
+Exact methods for this problem include variable elimination and boundary
+relaxations~\cite{larrosa-2005,chu-stuckey-garcia-2009}, and the unrestricted
+optimum, denoted $M(n)$ below, was completely determined by Chu and
+Stuckey~\cite{chu-stuckey-2012}.
+
+The connected problem, posed as a benchmark of the 2013 Answer Set Programming
+Competition~\cite{drescher-2013}, adds a global condition: the live cells must
+form one component under horizontal, vertical, and diagonal adjacency.  This
+is not a small perturbation.  Dense unrestricted optima often consist of a
+large maze and several stable $2\times2$ blocks, and such a block cannot be
+attached to any other live cell, so it is forbidden in every connected pattern
+of population greater than four.  The problem was also one of the challenges of
+the Verifiable Problems Track of CAISc 2026~\cite{caisc-problem}, posed for the
+thirteen sizes $8,9,10,11,13,15,16,17,19,20,21,31,32$.  There, an accepted
+artifact is a board checked by a deterministic verifier, that is, a lower
+bound.  The seven accepted submissions on this
+problem~\cite{caisc-collier,caisc-jaswal,caisc-menta,caisc-reddy,caisc-rushdi,caisc-sodha,caisc-sridhar}
+and the ideas taken from them are summarized in \cref{app:caisc}.  All thirteen
+challenge sizes are now determined exactly.
+
+Every lower bound in this paper is an explicitly verified board.  Upper bounds
+come from proof-logged threshold instances, exhaustive finite-state transfers,
+or min-plus boundary certificates; no exact value is inferred from an
+unsuccessful search.
+
+\begin{theorem}[Main results]\label{thm:main}
+Let $C(n)$ be the connected finite-board optimum of
+\cref{def:Cn}.  Then:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item
+\[
+\begin{aligned}
+C(1),\ldots,C(25)={}&0,4,6,8,11,18,28,32,43,53,63,76,88,\\
+&102,119,134,151,170,188,210,230,251,276,299,325.
+\end{aligned}
+\]
+\item Moreover
+\[
+\begin{aligned}
+&C(29)=435,\quad C(31)=497,\quad C(32)=528,\quad C(33)=562,\\
+&C(37)=704,\quad C(39)=782,\quad C(41)=863,\quad C(45)=1037,\\
+&C(49)=1228,\quad C(53)=1434,\quad C(57)=1657,\quad C(65)=2150.
+\end{aligned}
+\]
+\item For the sixteen remaining sizes $n\le50$, namely
+$n=26,27,28,30,34,35,36,38,40,42,43,44,46,47,48,50$, the optimum lies in the
+interval of \cref{tab:bounds}.  In particular $350\le C(26)\le352$, and every
+interval has width at most five.
+\item For every $n\ge14$,
+\begin{equation}\label{eq:main-upper}
+C(n)\le \min\{M(n),U(n)\},\qquad
+U(n)=\left\lfloor\frac{4n^2+5n-d_{n\bmod8}}8\right\rfloor,
+\end{equation}
+where
+\begin{equation}\label{eq:d-vector}
+(d_0,d_1,d_2,d_3,d_4,d_5,d_6,d_7)
+=(26,23,18,23,20,23,26,11).
+\end{equation}
+\item For every $n\ge1$,
+\begin{equation}\label{eq:main-lower}
+C(n)\ge\frac{n(n+1)}2-4,
+\end{equation}
+and the constant $4$ cannot be lowered: equality holds at $n=5$ and $n=8$.
+Hence $\lim_{n\to\infty}C(n)/n^2=1/2$.
+\end{enumerate}
+\end{theorem}
+
+The model and the two local reductions are set up in \cref{sec:model}.
+\Cref{sec:boundary} proves the upper bound (iv) by boundary automata.
+\Cref{sec:exact} closes the exact values (i) and (ii), \cref{sec:bounds50}
+records the ledger (iii), and \cref{sec:bands} proves (v).  \Cref{sec:open}
+lists the remaining questions.  The appendices contain the CAISc provenance,
+the details of the finite closures, the repair methods, earlier construction
+families, the computational record, and an atlas of all verified boards.
+
+\section{Finite-board model and local structure}\label{sec:model}
+
+For $n\ge1$ let $\B_n=\{0,1,\ldots,n-1\}^2\subset\mathbb Z^2$, and let
+$\N(z)=\{z+(a,b):(a,b)\in\{-1,0,1\}^2\setminus\{(0,0)\}\}$ be the Moore
+neighbourhood of $z$.  For $S\subseteq\B_n$ put $\nu_S(z)=|S\cap\N(z)|$ and
+extend the indicator of $S$ by zero to all of $\mathbb Z^2$.
+
+\begin{definition}\label{def:still-life}
+A set $S\subseteq\B_n$ is a \emph{finite-board still life} if, for every
+$z\in\mathbb Z^2$, $z\in S$ implies $\nu_S(z)\in\{2,3\}$ and $z\notin S$
+implies $\nu_S(z)\ne3$.  It is \emph{connected} if the graph on $S$ with edges
+between Moore-adjacent cells is connected.
+\end{definition}
+
+\begin{definition}\label{def:Cn}
+For $n\ge2$, let
+\[
+ C(n)=\max\{|S|:S\subseteq\B_n\text{ is a nonempty connected still life}\},
+\]
+and set $C(1)=0$, since a single live cell is unstable.  The unrestricted
+optimum $M(n)$ is defined by omitting connectivity.
+\end{definition}
+
+\begin{lemma}[Complete exterior ring]\label{lem:ring}
+Let $R_n=\{-1,0,\ldots,n\}^2\setminus\B_n$.  A set $S\subseteq\B_n$ is a still
+life if and only if the Life conditions hold at every cell of $\B_n\cup R_n$.
+\end{lemma}
+
+\begin{proof}
+Every point outside $\B_n\cup R_n$ has Chebyshev distance at least two from
+$\B_n$, hence has no live neighbour and cannot be born.
+\end{proof}
+
+\begin{lemma}[Sealed block]\label{lem:sealed-block}
+If a stable Life pattern contains all four cells of a unit $2\times2$ square,
+then those four cells form an entire Moore-connected component.
+\end{lemma}
+
+\begin{proof}
+Each block cell already has the other three as live neighbours.  An additional
+live cell Moore-adjacent to the block would give some block cell at least four
+live neighbours.
+\end{proof}
+
+\begin{corollary}[Block-free relaxation]\label{cor:block-free}
+Every connected still life with more than four live cells contains no live
+$2\times2$ block.
+\end{corollary}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=.34cm,y=.34cm]
+  \begin{scope}
+    \foreach \i in {-1,...,2}{\foreach \j in {-1,...,2}{
+      \fill[black!10] (\i,\j) rectangle ++(1,1);
+      \draw[black!35,line width=.25pt] (\i,\j) rectangle ++(1,1);
+    }}
+    \foreach \i in {0,1}{\foreach \j in {0,1}{
+      \fill[black] (\i,\j) rectangle ++(1,1);
+      \draw[white,line width=.25pt] (\i,\j) rectangle ++(1,1);
+    }}
+    \node[align=center] at (.5,-2.15) {a live block saturates\\all four survival counts};
+  \end{scope}
+  \begin{scope}[xshift=5.2cm]
+    \fill[black!8] (-1,-1) rectangle (6,6);
+    \fill[white] (0,0) rectangle (5,5);
+    \draw[black,line width=.7pt] (0,0) rectangle (5,5);
+    \draw[black!35,line width=.25pt] (-1,-1) grid (6,6);
+    \node at (2.5,2.5) {$\B_n$};
+    \node[align=center] at (2.5,-2.15) {the one-cell dead ring contains\\every exterior birth constraint};
+  \end{scope}
+\end{tikzpicture}
+\caption{The two local reductions.  The gray cells around the live block
+cannot be live; the shaded layer is the complete exterior verification ring.}
+\label{fig:local-reductions}
+\end{figure}
+
+\subsection{The unrestricted benchmark and wastage}\label{sec:wastage}
+
+\begin{theorem}[Chu--Stuckey]\label{thm:chu}
+Every connected still life is unrestricted, so $C(n)\le M(n)$.  The values of
+$M(n)$ for $n\le60$ are given by the exact table in~\cite{chu-stuckey-2012};
+those used in the ledger appear in \cref{tab:bounds}.  For $n\ge61$, let
+\[
+\Rminus=\{0,1,3,8,9,11,16,17,19,25,27,31,33,39,41,47,49\}
+ \pmod {54}.
+\]
+Then
+\begin{equation}\label{eq:chu-formula}
+M(n)=
+\begin{cases}
+\left\lfloor\dfrac{n^2}{2}+\dfrac{17n}{27}-2\right\rfloor,
+ & n\bmod54\in\Rminus,\\[6pt]
+\left\lfloor\dfrac{n^2}{2}+\dfrac{17n}{27}-1\right\rfloor,
+ & n\bmod54\notin\Rminus.
+\end{cases}
+\end{equation}
+\end{theorem}
+
+Chu and Stuckey redistribute two tokens initially placed at every lattice
+cell.  Each live cell receives at least four tokens, and the undistributed
+tokens define a nonnegative local wastage.  For a dead centre with
+$0,1,2,3,4$ live orthogonal neighbours the preliminary charge is $2,1,0,0,2$; a
+live centre is charged for eligible dead orthogonal donors beyond two, with the
+four exceptional donor and recipient patterns of~\cite{chu-stuckey-2012}
+assigned charge zero.  On a finite dead-exterior square the identity is exact.
+
+\begin{theorem}[Wastage identity]\label{thm:wastage}
+For every finite-board still life $S\subseteq\B_n$ there is a sum $W(S)$ of
+nonnegative radius-one local charges and side contributions such that
+\begin{equation}\label{eq:wastage}
+ W(S)=2n^2+4n-4|S|,
+ \qquad
+ |S|=\frac{2n^2+4n-W(S)}4.
+\end{equation}
+In particular $W(S)\equiv2n^2+4n\pmod4$.
+\end{theorem}
+
+\begin{lemma}[Partial-charge upper bound]\label{lem:partial-charge}
+If a set of local terms completely determined by a boundary annulus has total
+charge at least $B$, then every full still-life completion satisfies
+$|S|\le\lfloor(2n^2+4n-B)/4\rfloor$.
+\end{lemma}
+
+\begin{proof}
+All omitted wastage terms are nonnegative, so $W(S)\ge B$; substitute in
+\eqref{eq:wastage}.
+\end{proof}
+
+\section{Boundary automata and a residue-eight upper bound}\label{sec:boundary}
+
+The connected upper bound is a relaxation.  By \cref{cor:block-free} every
+relevant connected pattern is block-free, so we minimize wastage over all
+locally stable, block-free boundary annuli, without requiring that the annulus
+extend to a connected interior.  The relaxed class is larger, so its minimum
+charge is a valid lower bound on the charge of every connected board.
+
+\subsection{Straight edges, corners, and min-plus composition}
+
+Fix a depth $h\ge3$.  A straight-edge state is an ordered pair $(a,b)$ of
+binary column masks of height $h+2$: the outermost bit is the dead exterior,
+the next $h$ bits are the charged boundary strip, and the last bit is an inward
+halo.  A transition $(a,b)\to(b,c)$ is admitted exactly when appending $c$
+satisfies the Life rule at every centre whose neighbourhood has just become
+complete, suppresses births at the exterior centre finalized by the transition,
+and creates no live $2\times2$ block.  Its weight is the sum of the newly
+finalized local wastage terms.  With $E_h$ the weighted adjacency matrix and
+$(A\otimes B)_{ij}=\min_k(A_{ik}+B_{kj})$ the min-plus product, the minimum-cost
+length-$L$ path matrix satisfies
+\begin{equation}\label{eq:minplus-step}
+ D_{h,L+1}=D_{h,L}\otimes E_h.
+\end{equation}
+A corner is not determined by two independent edge endpoints, so the complete
+$(h+1)\times(h+1)$ corner patches are enumerated directly, giving a weighted
+corner relation $K_h$.  A depth-$h$ ring has straight length $n-2h$ on each side
+and minimum charge
+\begin{equation}\label{eq:ring-product}
+ B_h(n)=
+ \min_{\alpha_j,\beta_j}
+ \sum_{j=0}^3
+ \left(D_{h,n-2h}(\alpha_j,\beta_j)+K_h(\beta_j,\alpha_{j+1})\right),
+ \qquad \alpha_4=\alpha_0.
+\end{equation}
+Straight strips and corners partition the annular local terms, every full board
+projects to a feasible ring, and the uncharged interior terms are nonnegative,
+so by \cref{lem:partial-charge}
+\begin{equation}\label{eq:Bh-upper}
+ C(n)\le
+ \left\lfloor\frac{2n^2+4n-B_h(n)}4\right\rfloor.
+\end{equation}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=.6]
+  \fill[black!5] (0,0) rectangle (9,9);
+  \fill[white] (2.15,2.15) rectangle (6.85,6.85);
+  \draw[line width=.8pt] (0,0) rectangle (9,9);
+  \draw[line width=.8pt] (2.15,2.15) rectangle (6.85,6.85);
+  \fill[black!20] (0,6.85) rectangle (2.15,9);
+  \fill[black!20] (6.85,6.85) rectangle (9,9);
+  \fill[black!20] (6.85,0) rectangle (9,2.15);
+  \fill[black!20] (0,0) rectangle (2.15,2.15);
+  \draw[<->,line width=.7pt] (2.35,7.95) -- (6.65,7.95)
+    node[midway,fill=black!5,inner sep=2pt] {$D_{h,n-2h}$};
+  \draw[<->,line width=.7pt] (7.95,6.65) -- (7.95,2.35)
+    node[midway,fill=black!5,inner sep=2pt,rotate=90] {$D_{h,n-2h}$};
+  \node at (1.08,7.93) {$K_h$};
+  \node at (7.93,7.93) {$K_h$};
+  \node at (7.93,1.08) {$K_h$};
+  \node at (1.08,1.08) {$K_h$};
+  \node[align=center,font=\footnotesize] at (4.5,4.5) {uncharged interior\\(nonnegative wastage)};
+\end{tikzpicture}
+\caption{The square boundary as a cyclic min-plus product of four straight path
+matrices and four corner relations.}
+\label{fig:ring-automaton}
+\end{figure}
+
+The finite certificates rest on an entrywise matrix recurrence, not on a
+recurrence for the scalar minimum.
+
+\begin{lemma}[Propagation of a min-plus period]\label{lem:minplus-period}
+If $D_{h,L_0+p}=D_{h,L_0}+\delta$ entrywise, including equality of the
+$+\infty$ pattern, then $D_{h,L+p}=D_{h,L}+\delta$ for all $L\ge L_0$.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:minplus-step},
+$D_{h,L_0+p+1}=(D_{h,L_0}+\delta)\otimes E_h=D_{h,L_0+1}+\delta$, and the
+argument iterates; equality of the infinite entries preserves reachability.
+\end{proof}
+
+Since the corner relation is fixed, an entrywise side recurrence passes through
+\eqref{eq:ring-product}: increasing $n$ by eight increases the four-side minimum
+by $4\cdot3=12$.
+
+\subsection{The bound}
+
+At depth three the block-free edge graph has 214 states and 771 arcs, and an
+integer potential $p$ on its states satisfies $8w(e)-3+p(s)-p(t)\ge0$ for every
+arc $e:s\to t$ of wastage $w(e)$; summing around a cycle shows that every cycle
+has mean weight at least $3/8$, and length-eight cycles of cost three attain it.
+Together with the complete $4\times4$ corner census and the entrywise recurrence
+$D_{3,L+8}=D_{3,L}+3$ for $L\ge20$, this gives the depth-three bound.  Depth
+four retains one more inward layer.  The certificate data for depths three
+through six are listed in \cref{app:boundary}.
+
+\begin{proposition}[Depths three and four]\label{prop:U4}
+For $n\ge10$ and $n\ge14$ respectively,
+\[
+ C(n)\le U_3(n)=\left\lfloor\frac{4n^2+5n-b_{n\bmod8}}8\right\rfloor,
+ \qquad
+ C(n)\le U_4(n)=\left\lfloor\frac{4n^2+5n-c_{n\bmod8}}8\right\rfloor,
+\]
+where $(b_0,\ldots,b_7)=(18,15,10,15,12,15,18,3)$ and
+$(c_0,\ldots,c_7)=(18,23,18,23,20,15,26,11)$.
+\end{proposition}
+
+Residues zero and five require equality-language arguments.  At depth five the
+minima at $n=21,29,37,45,53$ are one unit above the depth-four charges, and the
+restricted matrix recurrence propagates the improvement.  For residue zero, the
+equality rings of depth five lie in a small support, and a safe depth-six lift
+of that support, which keeps every valid incoming and outgoing edge and both
+choices of the new halo bit, contains no ring at the old target for
+$n=16,24,32,40$; the restricted matrix again increases entrywise by three.
+
+\begin{proposition}[Residues five and zero]\label{prop:residue}
+If $n\ge21$ and $n\equiv5\pmod8$, then $C(n)\le U_4(n)-1$.  If $n\ge16$ and
+$n\equiv0\pmod8$, then $C(n)\le U_3(n)-1$.
+\end{proposition}
+
+\begin{theorem}[Connected boundary upper bound]\label{thm:upper}
+For every $n\ge14$, $C(n)\le U(n)$ with $U$ as in \eqref{eq:main-upper} and $d$
+as in \eqref{eq:d-vector}.  Therefore $C(n)\le\min\{M(n),U(n)\}$.
+\end{theorem}
+
+\begin{proof}
+Use $U_4$ in residues $1,2,3,4,6,7$.  In residue five, subtracting one from
+$U_4$ changes $c_5=15$ to $d_5=23$; in residue zero, subtracting one from $U_3$
+changes $b_0=18$ to $d_0=26$.  The unrestricted inequality is \cref{thm:chu}.
+\end{proof}
+
+\begin{corollary}[Upper-bound recurrence]\label{cor:U-recurrence}
+For every $n\ge14$, $U(n+8)=U(n)+8n+37$.
+\end{corollary}
+
+\begin{proof}
+The residue correction is unchanged, and $4(n+8)^2+5(n+8)-(4n^2+5n)=8(8n+37)$
+is divisible by eight, so the increment passes through the floor.
+\end{proof}
+
+This is a recurrence for a proved upper bound, not for $C(n)$: boundary
+feasibility does not guarantee a connected interior completion.
+
+\section{Exact values}\label{sec:exact}
+
+The exact values of \cref{thm:main} are closed by the arguments of
+\cref{tab:exact-methods}.  In every row the lower bound is a verified connected
+board.  The proof index of the accompanying repository~\cite{repo} records, for
+some small sizes, further independent routes: equality with $M(n)$ at
+$n=2,3,4,6,7,9$ and complete block-free row enumerations at $n=5,8,10,11$.
+
+\begin{table}[!htbp]
+\centering
+\caption{Upper-bound method for each exact value.}
+\label{tab:exact-methods}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.2\textwidth} >{\raggedright\arraybackslash}p{0.3\textwidth} X@{}}
+\toprule
+sizes & exact values & upper-bound mechanism \\
+\midrule
+$1$ & $0$ & a single live cell dies \\
+$2$--$11$ & $4,6,8,11,18,28,32,43,53,63$ & complete connected threshold encodings with proof-logged refutations (\cref{app:sat}) \\
+$12,15,20,23,31,39$ & $76,119,210,276,497,782$ & connected boards attain $M(n)$ \\
+$13$ & $88$ & exhaustive block-free row dynamic program (\cref{app:n13}) \\
+$14$ & $102$ & complete depth-four low-wastage belt enumeration (\cref{app:n14}) \\
+$16,21,24,25,29,32,33$ & $134,230,299,325,435,528,562$ & connected boards attain $U(n)$ \\
+$37,41,45,49,53,57,65$ & $704,863,1037,1228,1434,1657,2150$ & connected boards attain $U(n)$ \\
+$17$ & $151$ & depth-five equality support and zero-charge depth-six lift (\cref{app:n17}) \\
+$18$ & $170$ & depth-seven exclusion of population $171$ (\cref{app:n18}) \\
+$19$ & $188$ & depth-nine exclusion of population $189$ (\cref{app:n19}) \\
+$22$ & $251$ & depth-eleven exclusion of population $252$ (\cref{app:n22}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Closures by the unrestricted optimum and by the boundary bound}
+\label{sec:closures-U}
+
+At $n=12,15,20,23,31,39$ connected boards attain
+$M(n)=76,119,210,276,497,782$, so $C(n)=M(n)$ there.  At $n=23,31,39$ the
+boundary formula is one cell weaker, since $U(23)=277$, $U(31)=498$, and
+$U(39)=783$.  Elsewhere the boundary bound is attained.
+
+\begin{proposition}[Closure by the boundary bound]\label{prop:closure-U}
+For $n\in\{16,21,24,25,29,32,33,37,41,45,49,53,57,65\}$ there is a verified
+connected still life in $\B_n$ of population $U(n)$, so $C(n)=U(n)$:
+\[
+\begin{array}{c|cccccccccccccc}
+n&16&21&24&25&29&32&33&37&41&45&49&53&57&65\\
+\hline
+C(n)&134&230&299&325&435&528&562&704&863&1037&1228&1434&1657&2150
+\end{array}
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{thm:upper}, $C(n)\le U(n)$ for $n\ge14$, and each listed board has
+exactly $U(n)$ live cells, is stable on $\B_n\cup R_n$, and has one Moore
+component.  These properties are recomputed by the audit script of
+\cref{app:certificates}.
+\end{proof}
+
+The exact values with $n\equiv5\pmod8$, $21\le n\le53$, and with
+$n\equiv1\pmod8$, $25\le n\le65$, form the chains
+\[
+ 21\to29\to37\to45\to53
+ \qquad\text{and}\qquad
+ 25\to33\to41\to49\to57\to65,
+\]
+in which consecutive values differ by exactly $8n+37$, the increment of $U$ in
+\cref{cor:U-recurrence}; for example $C(65)=2150=1657+8\cdot57+37$.  These are
+finite verified chains, not a proof that they continue.
+
+\subsection{Specialized closures}\label{sec:special}
+
+The remaining exact values need finite arguments beyond
+\cref{thm:upper}.  We summarize them here; the complete arguments are in
+\cref{app:closures}.
+
+\begin{itemize}[leftmargin=1.2em,label={}]
+\item \emph{$n\le11$.} Complete threshold encodings with a rooted spanning-tree
+connectivity model; unsatisfiability at $C(n)+1$ is certified by replayed
+proofs.
+\item \emph{$n=13$.} Any connected board with 89 cells is block-free; an exhaustive
+block-free row dynamic program, over 3,926,925,326 transitions, has maximum 88.
+\item \emph{$n=14$.} A 103-cell board would have wastage 36; all 261,225 physical
+low-charge depth-four belts and their centre completions give 224 stable
+103-cell boards, none connected.
+\item \emph{$n=16,17$.} A corrected depth-six charge with the wastage congruence gives
+$C(16)\le134$; at $n=17$ the depth-five equality support for wastage $38$ has a
+safe depth-six lift of minimum cost $39$, excluding 152.
+\item \emph{$n=18,19,22$.} Here $U(n)$ is one cell too weak.  For the target
+population $P=U(n)$ the wastage is $W=2n^2+4n-4P$, and the complete set of
+boundary rings of charge at most $W$ is lifted inward, layer by layer, keeping
+every physical corner and extension that could still spend the remaining
+slack.  The set becomes empty at depth seven for $n=18$ ($W=36$), at depth nine
+for $n=19$ ($W=42$), and at depth eleven for $n=22$ ($W=48$), where the
+straight sides have length zero.  Verified boards of populations 170, 188, and
+251 meet the resulting bounds.  The 170-cell board at $n=18$ does not come from
+component repair of the unrestricted optimum, where all 170-cell repairs have
+three components; it was recovered from the complete low-slack boundary
+language, and it is checked directly.
+\end{itemize}
+
+\begin{figure}[t]
+\centering
+\input{figures/fig_new_exact.tex}
+\caption{Exact constructions at $n=18,19,22,29$ with their populations.  The
+first three are optimal by the specialized closures, and $C(29)=U(29)$ by
+\cref{prop:closure-U}.}
+\label{fig:new-exact}
+\end{figure}
+
+\section{Bounds through fifty}\label{sec:bounds50}
+
+Every board in the ledger was found by exact component repair of unrestricted
+optima, large-neighbourhood optimization, local replacement rules, or the
+periodic families; these methods are described in \cref{app:repair}.  Each board
+is checked on the complete exterior ring and for a single Moore component.  Let
+$L_n$ be the population of the retained board and $\overline C(n)$ the
+strongest upper bound obtained from $M(n)$, \cref{thm:upper}, and the
+specialized closures.  \Cref{tab:bounds} gives the ledger from $n=18$ to
+$n=50$; seventeen of these sizes are exact and sixteen are open.  The retained
+boards exceed the capped-brick constructions of \cref{app:families} at every
+size $22\le n\le50$ and the band families of \cref{sec:bands} at 20 of the 27
+sizes $24\le n\le50$, equalling them at the other seven.
+
+\begin{table}[t]
+\centering
+\caption{Rigorous connected bounds for $18\le n\le50$: $L_n$ is the verified
+construction, $M(n)$ the unrestricted optimum, $U(n)$ the bound of
+\cref{thm:upper}, and $\overline C(n)$ the final upper bound.  The dagger marks
+the specialized exclusions at $n=18,19,22$.  At $n=18,20,23,28,31,36,39,44,47$
+the unrestricted optimum satisfies $M(n)\le U(n)$; elsewhere the boundary bound
+is strictly stronger.}
+\label{tab:bounds}
+\small
+\input{tables/bounds_18_50.tex}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\begin{minipage}{.49\textwidth}
+\centering
+\input{figures/fig_bounds_density.tex}
+\end{minipage}\hfill
+\begin{minipage}{.49\textwidth}
+\centering
+\input{figures/fig_gaps.tex}
+\end{minipage}
+\caption{Left: unrestricted optimum, connected upper bound, and verified lower
+bound for $7\le n\le50$, normalized by area; filled markers are proved optima.
+Densities can exceed $1/2$ because boundary cells receive the $O(n)$ edge bonus
+of \eqref{eq:wastage}.  Right: the remaining gap $\overline C(n)-L_n$, at most
+five, attained at $n=43$ and $n=46$.}
+\label{fig:ledger}
+\end{figure}
+
+Small gaps do not by themselves indicate that a uniform formula is near.  At
+$n=28$ and $n=47$ the intervals have width one, and in both cases
+$M(n)=U(n)$, so a further cell needs either a connected board that is an
+unrestricted optimum or an exclusion beyond the present boundary language.  The
+construction-side difficulty is the compatibility of a dense periodic bulk with
+four finite caps and one global component; the upper-bound difficulty is that a
+shallow boundary relaxation need not detect a connectivity obstruction that
+occurs only after several inward layers.
+
+\section{Period-eight band families and a uniform lower bound}\label{sec:bands}
+
+Let $S$ be a binary $n_0\times n_0$ seed and let $h\ge2$ satisfy $n_0-h-8\ge2$.
+Call rows $h,\ldots,h+7$ and columns $h,\ldots,h+7$ of $S$ the \emph{bands}.  For
+$k\ge1$ put $n=n_0+8(k-1)$ and
+\begin{equation}\label{eq:band-index}
+ f_k(i)=
+ \begin{cases}
+ i,&0\le i<h,\\
+ h+((i-h)\bmod8),&h\le i<h+8k,\\
+ i-8(k-1),&h+8k\le i<n,
+ \end{cases}
+ \qquad
+ G_k(i,j)=S\bigl(f_k(i),f_k(j)\bigr).
+\end{equation}
+Thus $G_1=S$, and $G_{k+1}$ arises from $G_k$ by inserting one more copy of
+each band.  The rows of $G_k$ fall into a top cap of $h$ rows, $k$ copies of the
+band, and a bottom cap, and likewise the columns.  The resulting nine tile types
+are four corners, four sides, and one centre, and the content of a tile depends
+only on its type.  If $A$, $B$, $C$ count the live cells in the central tile, in
+the four side tiles together, and in the four corner tiles together, then
+\begin{equation}\label{eq:band-pop}
+ |G_k|=Ak^2+Bk+C\qquad(k\ge1).
+\end{equation}
+
+Nine seeds were found by the search methods of \cref{app:repair}; they are
+stored in \nolinkurl{ancillary/data/families.json}.  For each residue
+$r\in\{0,\ldots,7\}$ there is a seed of side $24+r$, and a ninth seed of side
+$40$ improves residue zero.  In every family the central $8\times8$ tile has
+half density, $A=32$ (\cref{tab:bands}).
+
+\begin{table}[t]
+\centering
+\caption{The nine band families: seed side $n_0$, band start $h$, tile counts
+$A,B,C$ of \eqref{eq:band-pop}, deficit $a_r=n(n+1)/2-|G_k|$, and the radius $R$
+of the connectivity certificate.  The primed row is the ninth family.}
+\label{tab:bands}
+\input{tables/band_families.tex}
+\end{table}
+
+\begin{theorem}[Band families]\label{thm:bands}
+Let $a=(a_0,\ldots,a_7)=(4,3,4,3,4,1,3,2)$.  For every $n\ge24$ there is a
+connected still life in $\B_n$ of population
+\begin{equation}\label{eq:band-family}
+ \frac{n(n+1)}2-a_{n\bmod8},
+\end{equation}
+and for $n\equiv0\pmod8$, $n\ge40$, one of population $n(n+1)/2-3$.  Consequently
+\begin{equation}\label{eq:uniform-lower}
+ C(n)\ge\frac{n(n+1)}2-4\qquad\text{for every }n\ge1,
+\end{equation}
+and the constant $4$ is best possible.
+\end{theorem}
+
+Stability is local, but connectivity is not.  For each tile type list its
+Moore components and, for every pair of neighbouring tile types (cardinal or
+diagonal), the pairs of components joined across the common boundary.  In each
+tile type call its largest component the \emph{main} component.  The tile grid
+of $G_k$ has $k+2$ rows and columns, labelled top, band, \ldots, band, bottom.
+For $R\ge1$, the \emph{context} of a tile position is the array of labels of the
+tiles within distance $R$ in each coordinate, clipped at the boundary.  A family
+is \emph{$R$-linked} if, for every $k\in\{1,\ldots,2R+1\}$ and every tile
+position of $G_k$, inside the graph spanned by the tiles of its context, every
+component of the tile and the main component of each cardinally adjacent tile
+are joined to the main component of the tile.
+
+\begin{lemma}[Connectivity pumping]\label{lem:pumping}
+If a band family is $R$-linked, then $G_k$ is connected for every $k\ge1$.
+\end{lemma}
+
+\begin{proof}
+In one direction the clipped context at tile index $p\in\{0,\ldots,k+1\}$ is
+determined by $(\min(p,R),\min(k+1-p,R))$.  For $k\ge2R+1$ the set of these
+pairs is $\{(p,R):p\le R\}\cup\{(R,R)\}\cup\{(R,q):q\le R\}$, independent of $k$
+and already realized at $k=2R+1$.  A context in the plane is a pair of a row and
+a column context, and tile contents and interfaces depend only on tile types, so
+the linking property holds at every position of every $G_k$.  Hence every
+component is joined to the main component of its tile, the main components of
+cardinally adjacent tiles are joined, and since the tile grid is connected, so
+is $G_k$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:bands}]
+\emph{Population.}  For each seed, \cref{tab:bands} gives $A=32$, and
+substituting $k=(n-n_0)/8+1$ into \eqref{eq:band-pop} gives exactly
+$n(n+1)/2-a_r$.  For instance, for $r=5$ and $n=21+8k$ one has
+$n(n+1)/2=32k^2+172k+231$ and $|G_k|=32k^2+172k+230$.  Both sides are
+quadratics in $k$ with leading coefficient $32$, so comparing the other two
+coefficients suffices.  The ninth family has $|G_k|=32k^2+260k+525=n(n+1)/2-3$
+with $n=32+8k$.
+
+\emph{Stability.}  Stability is a condition on the $3\times3$ windows of the
+zero-extended array at the centres of $\B_n\cup R_n$.  The caps and the band
+each have at least two lines, so three consecutive lines of $G_k$ are three
+consecutive lines of $S$, or straddle a seam between two band copies (lines
+$h+6,h+7,h$ or $h+7,h,h+1$), possibly with dead lines beyond the boundary.  The
+set of such types is the same for all $k\ge2$, and a window is a pair of a row
+type and a column type, so every window of $G_k$ with $k\ge3$ occurs in $G_2$.
+Direct verification of $G_1$ and $G_2$ on $\B_n\cup R_n$ therefore proves
+stability for all $k$.
+
+\emph{Connectivity.}  The base families with $r=0$ and $r=2$ are $2$-linked,
+with 79 distinct contexts, and the other seven are $1$-linked, with 30.
+\Cref{lem:pumping} gives connectivity for every $k$.
+
+\emph{The uniform bound.}  Every $n\ge24$ equals $n_0+8(k-1)$ for the seed with
+$n_0=24+(n\bmod8)$ and some $k\ge1$, and the largest deficit is $4$.  For
+$n\le23$ the exact values give $C(n)-n(n+1)/2\ge-4$:
+\[
+\scriptsize
+\begin{array}{c|ccccccccccccccccccccccc}
+n&1&2&3&4&5&6&7&8&9&10&11&12&13&14&15&16&17&18&19&20&21&22&23\\
+\hline
+C(n)-\frac{n(n+1)}2&-1&1&0&-2&-4&-3&0&-4&-2&-2&-3&-2&-3&-3&-1&-2&-2&-1&-2&0&-1&-2&0
+\end{array}
+\]
+Equality occurs at $n=5$ and $n=8$, so the constant $4$ is best possible.  The
+population formulas, the window containment for $3\le k\le8$, every context, and
+the absence of new contexts for $2R+1\le k\le2R+4$ are rechecked by the audit
+script of \cref{app:certificates}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\input{figures/fig_band_family.tex}
+\caption{The band family of residue $r=5$ at $k=1$ (the seed, $n_0=29$) and
+$k=2$ ($n=37$).  Shaded rows and columns are the repeated bands.}
+\label{fig:band-family}
+\end{figure}
+
+\begin{theorem}[Density]\label{thm:density}
+$\lim_{n\to\infty}C(n)/n^2=1/2$.  More precisely,
+\[
+ \frac12\le\liminf_{n\to\infty}\frac{C(n)-n^2/2}n\le
+ \limsup_{n\to\infty}\frac{C(n)-n^2/2}n\le\frac58.
+\]
+\end{theorem}
+
+\begin{proof}
+The lower bounds follow from \cref{thm:bands}, since $C(n)\ge n^2/2+n/2-4$.  The
+upper bounds follow from $C(n)\le U(n)\le n^2/2+5n/8$.
+\end{proof}
+
+The earlier families of \cref{app:families} are weaker: the pond lattice has
+density $4/9$, the capped bricks have density $1/2$ with a negative linear
+coefficient, and the period-fifty-four family has linear coefficient $13/27<1/2$.
+The bound \eqref{eq:uniform-lower} is not an upper bound either:
+$C(65)=2150=65\cdot66/2+5$.  Whether $C(n)-n(n+1)/2$ is bounded is open.  The
+density statement is consistent with Elkies's theorem for infinite still
+lifes~\cite{elkies-1999}.
+
+\section{Open questions}\label{sec:open}
+
+The immediate finite problems are $350\le C(26)\le352$ and the one-cell
+intervals $406\le C(28)\le407$ and $1131\le C(47)\le1132$.
+
+The chains of \cref{sec:closures-U} suggest a sharper question: is
+$C(n)=U(n)$ for every $n\equiv5\pmod8$ with $n\ge21$ and every $n\equiv1\pmod8$
+with $n\ge25$?  In the other classes the optimum equals $U(n)$ at $n=16,24,32$
+and is strictly smaller at $n=14,17,18,19,22$.
+
+The upper expression satisfies the exact period of \cref{cor:U-recurrence}, but
+that is not a recurrence for $C(n)$: a construction pump must carry compatible
+states through all four corners, fill the enlarged interior stably, and preserve
+one component.  The band families achieve this with linear coefficient $1/2$,
+while $U$ has linear coefficient $5/8$, and the true linear coefficient is not
+known.  A natural route to an exact formula is a pair of finite transducers whose
+states record the four boundary phases together with a connectivity signature of
+the interior interface; the present boundary automata control wastage but forget
+that global information.
+
+The sequence $C(n)$ appears in the On-Line Encyclopedia of Integer Sequences as
+A398723~\cite{oeis-a398723}, with the unrestricted sequence A055397 as its
+companion upper bound~\cite{oeis-a055397}.  All boards, certificates, scripts,
+and verifiers are available in the public repository~\cite{repo}.
+
+\section*{Acknowledgments}
+
+The author thanks Paras Chopra, his mentor at Lossfunk, for guidance and support
+throughout this work.  Dr.~Ankan Pal (Birla Institute of Technology and
+Science, Pilani) served as reviewer of the Connected Still Life problem in the
+CAISc 2026 Verifiable Problems Track, and the author thanks him for his review.
+The author thanks the CAISc 2026 organizing team, Dhruv Trehan, Dhruv Kumar,
+Sasank Tripathi, and Devansh Agarwal, who organized the track from which the
+problem was drawn and who were co-authors of an earlier version of this
+manuscript, and the authors of the accepted CAISc submissions, whose boards and
+methods informed this work.
+
+\subsection*{AI declaration}
+
+OpenAI's ChatGPT (Sol 5.6 and 6 Astra) was used mainly to find and run the
+search programs, certificate generators, and proofs, and Anthropic's Claude was
+used to help prepare this manuscript.  The author directed the work, checked the
+claims, and is responsible for every statement.  Every result rests on a
+verified board, a finite certificate, a cited theorem, or an argument given in
+the paper.
+
+\begingroup
+\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{elkies-1999}
+N. D. Elkies,
+The still-life density problem and its generalizations,
+\emph{Voronoi's Impact on Modern Science}, Book I, 228--253, 1998;
+arXiv:math/9905194.
+
+\bibitem{larrosa-2005}
+J. Larrosa, E. Morancho, and D. Niso,
+On the practical use of variable elimination in constraint optimization
+problems: ``still-life'' as a case study,
+\emph{Journal of Artificial Intelligence Research} 23 (2005), 421--440.
+
+\bibitem{chu-stuckey-garcia-2009}
+G. Chu, P. J. Stuckey, and M. Garcia de la Banda,
+Using relaxations in maximum density still life,
+in \emph{Principles and Practice of Constraint Programming},
+Lecture Notes in Computer Science 5732, Springer, 2009, 258--273.
+
+\bibitem{chu-stuckey-2012}
+G. Chu and P. J. Stuckey,
+A complete solution to the maximum density still life problem,
+\emph{Artificial Intelligence} 184--185 (2012), 1--16.
+
+\bibitem{drescher-2013}
+Connected maximum-density still life, benchmark of the Fourth Answer Set
+Programming Competition, 2013,
+\url{https://www.mat.unical.it/aspcomp2013/ConnectedMaximumDensityStillLife}.
+
+\bibitem{oeis-a055397}
+OEIS Foundation,
+A055397: maximum number of live cells in a still life of Conway's Game of Life
+fitting in an $n\times n$ square,
+\url{https://oeis.org/A055397}.
+
+\bibitem{oeis-a398723}
+OEIS Foundation,
+A398723: maximum population of an 8-connected still life contained in an
+$n\times n$ square in Conway's Game of Life, with a dead exterior,
+\url{https://oeis.org/A398723}.
+
+\bibitem{repo}
+S. Mahajan,
+Maximum connected still lifes: witnesses, bounds, and reproducible optimality
+proofs, \url{https://github.com/Siddhartha-Mahajan/connected-still-life}, 2026.
+
+\bibitem{caisc-problem}
+S. Mahajan,
+Connected Still Life, CAISc 2026 Verifiable Problems Track, 2026,
+\url{https://caisc2026.github.io/verifiable-problems/?problem=connected-still-life}.
+
+\bibitem{caisc-collier}
+M. Collier and B. Derfer,
+Connected Still Life Across an AI-Inclusive Cognitive Ecosystem: A
+Verifier-Attested Case Study, CAISc 2026,
+\url{https://openreview.net/forum?id=2RLaZFD49N}.
+
+\bibitem{caisc-jaswal}
+A. S. Jaswal,
+How Dense Can a Connected Still Life Be? Records, Proven Optima, and
+Machine-Checked Certificates up to $n=32$, CAISc 2026,
+\url{https://openreview.net/forum?id=3WPIRgk9pS}.
+
+\bibitem{caisc-menta}
+V. P. T. Menta,
+Verifier-Clean Connected Still Lifes Across All Box Sizes: A Complete CP-SAT
+Encoding with Annealing Polish, CAISc 2026,
+\url{https://openreview.net/forum?id=4LBYPzoSUW}.
+
+\bibitem{caisc-reddy}
+S. Reddy, J. M. S. Zakkam, S. R. Kanakamedala, S. Myana, and S. S. Gunturi,
+Still Life, Still Living: An LLM Coding Agent's Trajectory on Connected
+Game-of-Life Patterns, CAISc 2026,
+\url{https://openreview.net/forum?id=ojLUNf0fcA}.
+
+\bibitem{caisc-rushdi}
+A. A. Rushdi,
+A Spanning-Tree Encoding for the Connected Maximum Still-Life Problem, CAISc
+2026, \url{https://openreview.net/forum?id=c14oLVAvr5}.
+
+\bibitem{caisc-sodha}
+T. Sodha,
+The Cost of Connectivity: Exact and Heuristic Bounds for the Connected Maximum
+Density Still Life Problem, CAISc 2026,
+\url{https://openreview.net/forum?id=l3mTljsAht}.
+
+\bibitem{caisc-sridhar}
+P. Sridhar,
+Hybrid Exact and Heuristic Search for Dense Connected Still Lifes, CAISc 2026,
+\url{https://openreview.net/forum?id=BGHqGZz1iK}.
+
+\end{thebibliography}
+\endgroup
+
+\appendix
+
+\section{The CAISc 2026 challenge}\label{app:caisc}
+
+The first Conference for AI Scientists (CAISc 2026) was held online on 24--25
+July 2026; its Verifiable Problems Track paired each submission with an
+automatically checkable artifact~\cite{caisc-problem}.  For a prescribed size
+$n$, an artifact was a binary array $x\in\{0,1\}^{n\times n}$ and a claimed
+population $p$, accepted exactly when $p=\sum x_{ij}$, the B3/S23 conditions
+held on the board and its complete dead ring, and the support was one Moore
+component.  An accepted artifact therefore proves $C(n)\ge p$ but says nothing
+about $C(n)\le p$.  \Cref{tab:caisc-submissions} summarizes the seven accepted
+submissions; the entries report their own claims.
+
+\begin{table}[h]
+\centering
+\caption{Accepted CAISc 2026 connected-still-life submissions.}
+\label{tab:caisc-submissions}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.11\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}X@{}}
+\toprule
+submission & stated results & principal methods\\
+\midrule
+Collier~\cite{caisc-collier} & exact for $n\in\{8,9,10,11,13\}$; $209,495,526$ at $n=20,31,32$ & wastage-aware CP-SAT with lazy connectivity, MaxSAT, Chuffed, an IPASIR-UP propagator, stripe DP, cross-engine validation\\
+Jaswal~\cite{caisc-jaswal} & exact for $n\in\{8,9,10,11,15\}$; $133,208,495,524$ at $n=16,20,31,32$ & pseudo-Boolean model with strict-rank connectivity and VeriPB proof logging, CP-SAT, large-neighbourhood search; the $2\times8$ brick motif\\
+Menta~\cite{caisc-menta} & exact for $n\in\{8,9,10\}$; $133,207,485,515$ at $n=16,20,31,32$ & complete CP-SAT with breadth-first connectivity, symmetry, parallel tempering, verifier-gated acceptance\\
+Reddy~\cite{caisc-reddy} & exact for $n\in\{8,9,15\}$; $133,207,495,525$ at $n=16,20,31,32$ & CP-SAT, strip DP, symmetry audits, exact re-solving of pockets cut from dense still lifes\\
+Rushdi~\cite{caisc-rushdi} & exact for $n\in\{8,9,10,11,15\}$; $132,206,479,515$ at $n=16,20,31,32$ & parent-pointer spanning tree in CP-SAT, local-search polishing\\
+Sodha~\cite{caisc-sodha} & exact for $n\in\{8,9,10,11,15\}$; $133,206,445,463$ at $n=16,20,31,32$ & wastage-aware CP-SAT and lazy constraints, GPU annealing\\
+Sridhar~\cite{caisc-sridhar} & exact for $n\in\{8,9,10,11,15\}$; $131,208,483,515$ at $n=16,20,31,32$ & SAT and MaxSAT encodings, static connectivity, row-frontier DP, seeds, annealing, repair\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Every board from these submissions was passed through the independent
+full-ring verifier; solver labels and declared populations were not trusted.
+The present paper raises the values at $n=16,19,20,31,32$ to
+$134,188,210,497,528$ and closes all thirteen sizes.  Several ideas were carried
+over.  Cross-engine rechecking follows Collier; the separation of an optimizer
+transcript from a replayable proof object follows Jaswal and Sridhar; complete
+static connectivity encodings of the kind used by Menta and Rushdi are used for
+small threshold instances; Reddy's pocket repair becomes the exact
+large-neighbourhood repair of \cref{app:repair}; and Sodha's cost-of-connectivity
+viewpoint and Collier's wastage-aware search motivated the block-free boundary
+relaxation of \cref{sec:boundary}.  Each theorem in this paper nevertheless rests
+on its own certificate or finite argument.
+
+\section{Boundary certificate data}\label{app:boundary}
+
+\emph{Depth three.}  The unrestricted depth-three edge graph has 222 states and
+787 arcs with minimum cycle mean $4/11$; removing block-creating arcs leaves 214
+states and 771 arcs with minimum cycle mean $3/8$, certified by the integer
+potential of \cref{sec:boundary}.  If $f(L)$ is the minimum cost of a free-ended
+block-free path of length $L$, a phase-potential check gives $f(L+8)=f(L)+3$ for
+$L\ge4$.  All $2^{16}$ binary $4\times4$ patches are examined for the corner
+relation: 784 are valid physical corners, giving 722 state mappings.
+
+\emph{Depth four.}  809 edge states and 3685 arcs.  The complete $5\times5$ corner
+census has 14,225 valid physical patches, 9957 minimum-cost mappings, and 711
+distinct output states, so the recurrence check uses a $711\times809$ restricted
+path matrix; at both recurrence phases all 470,400 finite entries increase by
+three and the infinite entries are unchanged.
+
+\emph{Depth five.}  3051 edge states and 17,649 arcs; the $6\times6$ corner census
+has 500,297 valid physical patches, 179,476 minimum-cost mappings, and 2706 output
+states.  For a target cost $K$, every closed four-step walk of cost at most $K$
+contains an arc of cost at most $\lfloor K/4\rfloor$; anchoring every such arc and
+computing exact two- and three-step return costs enumerates all low-cost rings.
+At $n=21,29,37,45,53$ the depth-five minima are $43,55,67,79,91$, one more than
+the depth-four charges $42,54,66,78,90$.
+
+\emph{Depth six, residue zero.}  At $n=16,24,32,40,48$ depth five attains the
+old minimum.  The equality rings lie in a support of 15 corner-output states, 29
+side arcs, 14 four-cycle shapes, and 23 physical equality corner mappings.  The
+lift charges only the genuinely new inward corner cell and keeps, for each of
+the 23 corners, every valid incoming and outgoing depth-five edge and both
+choices of the new halo bit.  The lifted language has 266 corner sources, 10,996
+depth-six edge states, and 55,422 arcs, contains no ring at the old target for
+$n=16,24,32,40$, and from the $n=40$ phase to the $n=48$ phase the restricted
+matrix increases entrywise by three.
+
+\section{Details of the specialized closures}\label{app:closures}
+
+\subsection[Threshold encodings for n <= 11]{Threshold encodings for $n\le11$}\label{app:sat}
+
+For each $v\in\B_n$ let $x_v$ be the live-cell variable.  The stability encoding
+forbids every assignment to a centre and its in-box neighbours that violates
+B3/S23, and for each centre of the exterior ring every assignment with exactly
+three live in-box neighbours; a sequential counter imposes $\sum_v x_v\ge K$.
+Connectivity chooses a root, the first live cell in row-major order; every other
+live cell chooses a Moore-adjacent live parent $u$ and every cell a binary rank
+$r_v\in\{0,\ldots,n^2-1\}$ with $p_{uv}=1\Rightarrow x_u=x_v=1$ and $r_u<r_v$.  A
+second component would contain a minimum-rank vertex without a parent of
+smaller rank, and conversely a connected live set admits such a tree, so the
+encoding is complete.  Requiring a live cell on the top and on the left side
+removes translations; no reflection or rotation is removed.  The excluded
+thresholds $K$ are
+\begin{center}
+\begin{tabular}{@{}c|rrrrrrrrrr@{}}
+$n$ & 2&3&4&5&6&7&8&9&10&11\\
+\midrule
+construction &4&6&8&11&18&28&32&43&53&63\\
+excluded $K$ &5&7&9&12&19&29&33&44&54&64
+\end{tabular}
+\end{center}
+Complete CNF and DRUP streams are retained and replayable through $n=7$.  The
+streams for $n=8,9,10,11$, of about $35$ MB, $79$ MB, $585$ MB, and $1.44$ GB,
+were independently replayed when generated; their hashes and replay records are
+retained.
+
+\subsection[The block-free row program at n=13]{The block-free row program at $n=13$}\label{app:n13}
+
+Any connected candidate with at least 89 cells is block-free, so it suffices to
+optimize over all block-free stable boards.  Rows are masks in $\bits^{13}$; for
+consecutive masks $a,b,c$ let $T(a,b,c)$ hold when every cell of $b$ satisfies the
+Life rule, the dead centres to the left and right of $b$ are not born, and rows
+$b,c$ contain no live block.  With $F_k(a,b)$ the maximum population of a partial
+board with final row pair $(a,b)$,
+\[
+ F_{k+1}(b,c)=\max_{a:T(a,b,c)}\bigl(F_k(a,b)+\Pop(c)\bigr),
+\]
+starting from the dead pair $(0,0)$ and ending with two forced zero rows.
+Successors are generated left to right with pruning of invalid prefixes.  The
+computation examines 3,926,925,326 transitions, with 24,235,166 active row-pair
+states after row 13 and final maximum 88.  An exhaustive generator agrees with
+the pruned one on 21,844 row pairs and 63,318 successors; the same recurrence
+gives block-free maxima $0,0,6,8,12,18,28,33$ for widths $1$ to $8$; and GCC and
+Clang reconstructions agree in layer counts, maxima, transition counts, and three
+64-bit layer digests.  Hence $C(13)=88$.
+
+\subsection[Complete low-wastage closure at n=14]{Complete low-wastage closure at $n=14$}\label{app:n14}
+
+The depth-four theorem gives $102\le C(14)\le103$, and a 103-cell board has
+$W=2\cdot14^2+4\cdot14-4\cdot103=36$, so its depth-four belt has charge at most
+36.  The complete low-charge corner language has 2664 abstract four-cycle orbits
+modulo rotation; all tied and near-minimum physical patches within the slack are
+expanded, giving 72,193, 87,672, and 101,360 physical belts at baseline charges
+34, 35, 36 (allowances 2, 1, 0), in total 261,225.  Every one of the $2^{16}$
+assignments of the remaining $4\times4$ centre is tested against each belt.  The
+224 stable 103-cell boards have component signatures
+$49+38+6+6+4$ (25), $54+39+6+4$ (60), $87+6+6+4$ (75), $91+6+6$ (8),
+$93+6+4$ (52), and $97+6$ (4); none is connected, so $C(14)=102$.
+
+\subsection[Closures at n=16 and n=17]{Closures at $n=16$ and $n=17$}\label{app:n17}
+
+At $n=16$ a board of population at least 135 has wastage at most 36.  The
+corrected depth-six equality lift proves $B_6(16)>36$, the minimum anchored
+depth-six ring having charge 38, and $W\equiv2\cdot16^2+4\cdot16\equiv0\pmod4$
+forces $W\ge40$, so $|S|\le(576-40)/4=134$.  At $n=17$ a 152-cell board has
+$W=38$, so its block-free depth-five projection is a minimum-charge equality ring.
+The equality support has 21 states and 50 arcs, with 27 physical equality
+patches, and the sixth layer must add zero.  The safe depth-six lift retains every
+locally valid zero-added-cost continuation and has minimum four-side cost 39, so
+no 152-cell board exists and $C(17)=151$.
+
+\subsection[The closure at n=18]{The closure at $n=18$}\label{app:n18}
+
+The unrestricted $18\times18$ optimum has population 171 and signature
+$159+4+4+4$.  Coupled component-reducing repair gives 21 stable 170-cell states
+with three components, 128 with population 169 and two components, and 240
+connected 168-cell states; freeing the 144 cells within radius four of the three
+blocks gives exact restricted optimum 168.  A connected 171-cell board would have
+total wastage 36.  The complete depth-five equality support at this target has
+four states and eight arcs, its zero-added-wastage depth-six support has four
+states and four self-loops, and the safe depth-seven target-36 support is empty;
+so $C(18)\le170$.  The verified 170-cell board was recovered from the complete
+inward low-slack boundary language: at terminal depth nine, where the straight
+sides of the $18\times18$ board have length zero, a four-corner assembly covers
+the whole board.
+
+\subsection[The closure at n=19]{The closure at $n=19$}\label{app:n19}
+
+The unrestricted $19\times19$ optimum has population 190 and signature
+$142+12\cdot4$, and $U(19)=189$.  A population-189 board has $W=42$, while the
+exact depth-five minimum is $40$, so physical realizations that spend the two
+remaining units must be kept.  Let $T_d(i,j)$ be the minimum charge of a depth-$d$
+side followed by a corner from state $i$ to state $j$, $M_d$ the minimum cost of
+a closed four-step walk in $T_d$, and $S_d=42-M_d$.  For every arc in a closed
+walk of cost at most $42$, the lifting keeps every physical corner realization of
+charge at most $T_d(i,j)+S_d$, and then lifts every next-layer edge and corner of
+added charge at most $S_d$.  Replacing each realization in the projection of a
+population-189 board by its abstract minimum gives a supported cycle of cost at
+least $M_d$, so the total excess is at most $S_d$ and every such projection
+survives: the language is a safe overapproximation (\cref{tab:n19-lift}).
+
+\begin{table}[h]
+\centering
+\caption{Low-slack lifting for population 189 at $n=19$.}
+\label{tab:n19-lift}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+depth & straight length & minimum & slack & physical candidates & retained corners & target support\\
+\midrule
+5 & 9 & 40 & 2 & 500,297 & 133 & 38 states, 123 arcs\\
+6 & 7 & 42 & 0 & 9,785 & 19 & 11 states, 18 arcs\\
+7 & 5 & 42 & 0 & 6,610 & 4 & 4 states, 4 arcs\\
+8 & 3 & 42 & 0 & 1,252 & 4 & 4 states, 4 arcs\\
+9 & 1 & none & none & 2,328 & 0 & empty\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At depth nine there are two finite arcs of charge at most $\lfloor42/4\rfloor=10$
+and neither has a finite three-step return, while every closed four-step walk of
+charge at most $42$ contains such an arc.  So population 189 is impossible and
+$C(19)=188$.
+
+\subsection[The closure at n=22]{The closure at $n=22$}\label{app:n22}
+
+Here $M(22)=253$ and $U(22)=252$, and a 252-cell board has $W=48$.  The same
+lifting with target $48$ runs from depth five, where the minimum is $45$ and the
+slack three, through depth six onward, where the minimum is $48$ and the slack
+zero, to the terminal depth eleven, where the straight sides have length zero.
+The numbers of retained physical corner classes at depths $5,\ldots,11$ are
+$1309,62,104,112,42,4,0$.  At depth eleven a side transfer is the identity join,
+so consecutive corners can be joined only if the output state of one equals the
+incoming state of the next, and among the 2592 minimum corner relations, with 180
+distinct output states, no compatible pair exists.  The earlier layers are
+essential; the terminal incompatibility alone would not suffice.  Hence
+$C(22)=251$.
+
+\section{Construction and repair methods}\label{app:repair}
+
+Every lower bound is a complete binary board; the eight symmetries of the square
+are factored out by keeping the lexicographically least representative.
+
+\emph{Exact large-neighbourhood repair.}  Let $Y\subseteq\B_n$ be a stable,
+possibly disconnected source and $R\subseteq\B_n$ the cells allowed to change,
+and let $R^+$ be the cells of $\B_n\cup R_n$ within Chebyshev distance one of
+$R$.  Fixing $x_z=\mathbf1_Y(z)$ outside $R$ and imposing the Life rule at every
+centre of $R^+$ describes exactly the stable boards that agree with $Y$ outside
+$R$.  Population is maximized and connectivity imposed by a rooted parent-and-rank
+system or by an exact acceptance gate.  Useful regions are neighbourhoods of small
+components, corridors joining them to the main component, side strips, quadrants,
+and unions of overlapping neighbourhoods.  Disjoint defects may be repaired in
+sequence, while overlapping defects must be optimized together, since absorbing
+one block can create a birth or saturate a cell near another.
+
+\emph{A replacement grammar.}  Each successful repair gives a pair of local
+patterns with a fixed radius-two halo, usable wherever its halo agrees; merging
+rules gives 72 component-reducing rules from 145 change clusters.  Exhausting
+this grammar is a statement about the rule set, not a global upper bound; it
+produces lower bounds and selects regions for exact optimization.
+
+\emph{A representative repair at $n=40$.}  An unrestricted $40\times40$ optimum
+has population 824 and component signature $776+12\cdot4$.  Sequential one-cell
+repairs give a connected board of 812 cells, a coupled radius-four optimization
+gives 814, and large-neighbourhood search gives 815.  A later search reached 817,
+and that board is the seed of the ninth band family, so $817\le C(40)\le821$.
+The example shows why an unrestricted optimum is a good density seed but a poor
+connected construction: its excess population sits in components that cannot be
+joined without coordinated changes.
+
+\begin{figure}[h]
+\centering
+\input{figures/fig_open.tex}
+\caption{Verified boards at four open sizes: the first open case $n=26$, $n=28$
+one cell below the unrestricted optimum, the endpoint of the $n=40$ search, and
+$n=47$ with gap one.}
+\label{fig:open-constructions}
+\end{figure}
+
+\section{Earlier periodic families}\label{app:families}
+
+\emph{A period-six pond lattice.}  Let
+$P=\{(0,1),(0,2),(1,0),(1,3),(2,0),(2,3),(3,1),(3,2)\}$, the eight-cell pond in a
+$4\times4$ square, $m=\lfloor(n-1)/3\rfloor$, and
+$S_n^{\rm pond}=\bigcup\{P+(3i,3j):0\le i,j<m,\ i\equiv j\pmod2\}$.  The copies are disjoint and lie in $\B_n$, diagonally
+consecutive ponds are Moore-adjacent, the index set is connected under diagonal
+steps, and the only neighbourhoods are those of an isolated pond, a diagonal
+interface, and the outer boundary.  Hence for $n\ge4$, $S_n^{\rm pond}$ is a
+connected still life of population
+$8(\lceil m/2\rceil^2+\lfloor m/2\rfloor^2)=(4/9)n^2+O(n)$.
+
+\emph{Period-eight capped bricks.}  The interior is the $2\times8$ tile
+\[
+T=
+\begin{pmatrix}
+0&0&0&1&1&0&0&0\\
+1&1&1&0&0&1&1&1
+\end{pmatrix}
+\]
+of Jaswal~\cite{caisc-jaswal}, repeated with periods two and eight.  For each
+residue $r\pmod8$ a fixed width-four template replaces the four strips and
+corners; a finite local certificate checks every $3\times3$ window at a cap, an
+interface, or a corner, and a finite quotient graph checks connectivity.  This
+gives connected still lifes of population $P_r(n)$ for all $n\equiv r\pmod8$
+above the thresholds of \cref{tab:brick}.
+
+\begin{table}[h]
+\centering
+\caption{Period-eight capped-brick populations.}
+\label{tab:brick}
+\small
+\begin{tabular}{@{}crl@{\hspace{3em}}crl@{}}
+\toprule
+$r$ & least $n$ & $P_r(n)$ & $r$ & least $n$ & $P_r(n)$\\
+\midrule
+0 & 16 & $\frac12n^2-3n+13$ & 4 & 12 & $\frac12n^2-\frac{19}{8}n+\frac{19}{2}$\\
+1 & 17 & $\frac12n^2-\frac92n+5$ & 5 & 13 & $\frac12n^2-\frac{11}{8}n+\frac{51}{8}$\\
+2 & 10 & $\frac12n^2-\frac58n-\frac{23}{4}$ & 6 & 14 & $\frac12n^2-3n+12$\\
+3 & 11 & $\frac12n^2-\frac{23}{8}n-\frac{87}{8}$ & 7 & 15 & $\frac12n^2-\frac34n+\frac{19}{4}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{A period-fifty-four macrotile family.}  Split the rows of a connected
+$154\times154$ board into blocks of heights $42,54,58$ and its columns into
+blocks of widths $48,54,52$, and repeat the central row and column bands together
+$k$ times ($k=0$ deletes one copy of each).  The side is $n=100+54k$ and the nine
+macrotile populations give a connected still life of population
+$1458k^2+5426k+5051=n^2/2+26k+51$.  The members $k=0,1,2$ contain every cap and
+seam type, so stability for all $k$ follows from finitely many windows; the
+largest component of every macrotile meets the largest components across every
+interface, and the secondary components in the right-hand macrotiles have
+certified interface edges to adjacent main components.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=.6\textwidth]{periodic_families.pdf}
+\caption{Members of the pond and capped-brick families.}
+\label{fig:periodic-families}
+\end{figure}
+
+\section{Computational certificates and ancillary data}\label{app:certificates}
+
+The public repository~\cite{repo} contains the verified boards for
+$2\le n\le50$, the boundary, equality-support, closure, and row certificates, two
+independent board verifiers, regeneration scripts, regression tests, and a proof
+index recording the upper-bound route for each exact value of its ledger.  The
+certificates for the small proof-logged exclusions are those distributed with the
+first version of this paper.  The directory \nolinkurl{ancillary/} accompanying
+this version contains what is new in it: the eleven boards that improve lower
+endpoints at $n=26,29,35,37,40,41,43,45,46,47,49$ (closing $n=29,37,41,45,49$),
+the boards at $n=53,55,57,65$, the nine band-family seeds, the updated ledger,
+the script that regenerates the figures and tables, and a standalone audit script.
+
+The construction verifiers recompute the Life rule and connectivity from the grid
+and do not trust stored counts.  The SAT objects are threshold statements: a
+satisfying assignment at the target would refute the bound, whereas a checked
+refutation proves it.
+
+Running \texttt{python3 ancillary/scripts/verify\_manuscript.py}, which uses only
+the Python standard library, recomputes the population, stability on the full
+dead ring, and connectivity of every board used here; rebuilds the ledger for
+$2\le n\le50$; checks the statements about exact values, open intervals, and the
+chains of \cref{sec:closures-U}; and certifies the nine band families as in the
+proof of \cref{thm:bands}.  It reads the upper bounds of the repository ledger
+and does not replay the boundary, row, or closure certificates, which are audited
+by the repository's own scripts.  The unrestricted maxima $M(n)$ are cited, not
+recomputed.  No proof-assistant formalization is claimed.
+
+\section{Atlas of verified boards}\label{app:atlas}
+
+The verified board for every $n$ from $2$ to $50$, and the optimal boards at
+$n=53,57,65$.  Solid blue frames mark proved optima; dashed gray frames mark open
+sizes, labelled with the current interval.
+
+\medskip
+\input{figures/atlas.tex}
+
+\end{document}
