@@ -34,14 +34,6 @@ mathematical evidence is indexed separately in [the proof index](../data/proof_i
 - **Tanay Sodha.** [The Cost of Connectivity: Exact and Heuristic Bounds for the Connected Maximum Density Still Life Problem](https://openreview.net/forum?id=l3mTljsAht). CAISc 2026. Connectivity-constrained optimization and bounds.
 - **Ahmad A Rushdi.** [A Spanning-Tree Encoding for the Connected Maximum Still-Life Problem](https://openreview.net/forum?id=c14oLVAvr5). CAISc 2026. Spanning-tree connectivity encoding.
 
-## Other construction source
-
-The optional period-six pond baseline follows the motif in
-[A Dense Connected Still Life on a 31 × 31 Grid via a Periodic Hexagonal Pond Lattice](https://openreview.net/forum?id=uX7ICQNb9g),
-a CAISc submission attributed to **Anonymous Author(s)** in the available paper.
-It is not on the public accepted-paper list; a named author could not be verified. This source is
-credited for the motif, not for any optimality claim in this release.
-
 ## Mathematical sources
 
 - **Geoffrey Chu and Peter J. Stuckey.** [A complete solution to the Maximum Density Still Life Problem](https://doi.org/10.1016/j.artint.2012.02.001), *Artificial Intelligence* 184–185 (2012), 1–16. Table 7 supplies the unrestricted maxima used here; the paper supplies the wastage framework and the original period-54 construction geometry. The connected period-54 family in this release uses a repaired connected seed.
